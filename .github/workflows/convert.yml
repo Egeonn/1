@@ -1,9 +1,9 @@
-name: Convert Payload to Surge
+name: Convert Mihomo Ruleset to Surge
 
 on:
   push:
     paths:
-      - "payload/*.yaml"
+      - "mihomo_ruleset/*.yaml"
       - "scripts/*.sh"
 
 jobs:
@@ -21,13 +21,10 @@ jobs:
       - name: Add headers
         run: bash scripts/add_header.sh
 
-      - name: Generate RULE-SET config
-        run: bash scripts/gen_ruleset_config.sh
-
       - name: Commit results
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add output/
-          git commit -m "Auto convert payload → Surge"
+          git add surge_ruleset/
+          git commit -m "Auto convert mihomo_ruleset → surge_ruleset"
           git push
