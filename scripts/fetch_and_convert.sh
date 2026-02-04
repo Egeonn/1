@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source_list="ruleset_sources.txt"
+source_list="ruleset_sources"
 output_dir="ruleset_txt"
 
 mkdir -p "$output_dir"
