@@ -1,10 +1,13 @@
-name: Convert Mihomo Ruleset to Surge
+name: Auto Convert Multiple Remote Rulesets to TXT
 
 on:
+  schedule:
+    - cron: "0 */12 * * *"   # 每 12 小时检测一次
+  workflow_dispatch:
   push:
     paths:
-      - "mihomo_ruleset/*.yaml"
       - "scripts/*.sh"
+      - "ruleset_sources.txt"
 
 jobs:
   convert:
@@ -15,16 +18,20 @@ jobs:
       - name: Install yq
         run: sudo apt-get install -y yq
 
-      - name: Convert payload → Surge
-        run: bash scripts/convert_payload.sh
+      - name: Fetch + Convert all remote rulesets
+        run: bash scripts/fetch_and_convert.sh
 
       - name: Add headers
         run: bash scripts/add_header.sh
 
-      - name: Commit results
+      - name: Commit changes if any
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add surge_ruleset/
-          git commit -m "Auto convert mihomo_ruleset → surge_ruleset"
-          git push
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git add ruleset_txt/
+            git commit -m "Auto update: remote rulesets changed"
+            git push
+          else
+            echo "No changes to commit"
+          fi
