@@ -2,8 +2,8 @@
 
 output_dir="ruleset_txt"
 
-for file in "$output_dir"/*.list; do
-    name=$(basename "$file" .list)
+for file in "$output_dir"/*.txt; do
+    name=$(basename "$file" .txt)
     count=$(grep -v '^#' "$file" | wc -l)
 
     sed -i "1i # 规则名称: $name" "$file"
